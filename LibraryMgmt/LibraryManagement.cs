@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -15,17 +16,19 @@ namespace LibraryMgmt
         {
             books = [];
         }
-   
-        public void LibraryTable(List<Book> books)
+
+        private void LibraryTable(List<Book> books)
         {
             Console.WriteLine("---------------------------------------------------------------------------------------------------------------------");
-            Console.WriteLine("| No  | Title            | Author          | ISBN  | Category  | Publication Date   | Availability Status          |");
+            Console.WriteLine("| No   | Title            | Author          | ISBN           | Publication Date    | Category | Availability Status |");
             Console.WriteLine("---------------------------------------------------------------------------------------------------------------------");
 
             foreach (Book book in books)
             {
-                Console.WriteLine($"{book.BookId,-3} {book.GetTitle(),-16}, {book.GetAuthor(),-16}, {book.GetISBN(),-15}, {book.GetCategory(),-10}, {book.GetPublicationDate(),-10}, {book.GetAvailabilityStatus(),-15}\n");
+                Console.WriteLine($"| {book.BookId,-4} | {book.GetTitle().ToUpper(),-15} | {book.GetAuthor().ToUpper(),-15} | {book.GetISBN(),-14} | {book.GetPublicationDate(),-16}  | {book.GetCategory().ToUpper(),-12} | {book.GetAvailabilityStatus().ToUpper(),-20} |");
             }
+
+            Console.WriteLine("---------------------------------------------------------------------------------------------------------------------");
         }
 
         public void ViewBooks()
@@ -48,34 +51,76 @@ namespace LibraryMgmt
                 Console.Write("Enter Title: ");
                 string title = Console.ReadLine();
                 title = ValidateInput(title);
+
+                if (title == null)
+                {
+                    Console.WriteLine("Try adding a book to the library again\nPress Enter to see menu");
+                    return;
+                }
+
                 book.SetTitle(title);
 
                 Console.Write("Enter Author: ");
                 string author = Console.ReadLine();
                 author = ValidateInput(author);
+
+                if (author == null)
+                {
+                    Console.WriteLine("Try adding a book to the library again\nPress Enter to see menu");
+                    return;
+                }
                 book.SetAuthor(author);
 
                 Console.Write("Enter ISBN: ");
                 string iSBN = Console.ReadLine();
                 iSBN = ValidateISBN(iSBN);
+
+                if (iSBN == null)
+                {
+                    Console.WriteLine("Try adding a book to the library again\nPress Enter to see menu");
+                    return;
+                }
+
                 book.SetISBN(iSBN);
+
+                Console.Write("Enter Publication Date(MM/DD/YYYY): ");
+                string publicationDate = Console.ReadLine();
+                DateOnly? convertedDate = ValidatePublicationDate(publicationDate);
+
+                if (convertedDate == null)
+                {
+                    Console.WriteLine("Try adding a book to the library again\nPress Enter to see menu");
+                    return;
+                }
+
+                book.SetPublicationDate(convertedDate);
 
                 Console.Write("Enter Category : ");
                 string category = Console.ReadLine();
-                category = ValidateInput(category);
+                category = ValidateCategory(category);
+
+                if (category==null)
+                {
+                    Console.WriteLine("Try adding a book to the library again\nPress Enter to see menu");
+                    return;
+                }
+
                 book.SetCategory(category);
 
-                Console.Write("Enter Publication Date: ");
-                string publicationDate = Console.ReadLine();
-                publicationDate = ValidatePublicationDate(publicationDate);
-                book.SetPublicationDate(publicationDate);
-
-                Console.Write("Enter Availability Status: ");
+                Console.Write("Enter Availability Status(Available/Unavailable/Pending/Reserved): ");
                 string availabilityStatus = Console.ReadLine();
-                availabilityStatus = ValidateInput(availabilityStatus);
+                availabilityStatus = ValidateAvailability(availabilityStatus);
+
+                if (availabilityStatus == null)
+                {
+                    Console.WriteLine("Try adding a book to the library again\nPress Enter to see menu");
+                    return;
+                }
+
                 book.SetAvailabilityStatus(availabilityStatus);
 
                 books.Add(book);
+                Console.WriteLine("Book added to Library successfully\nPress Enter to see menu");
             }
             catch (FormatException)
             {
@@ -90,44 +135,109 @@ namespace LibraryMgmt
 
             Book book = GetBookById(id);
 
-            try
+
+            if (book == null)
             {
-                Console.Write("Enter Title: ");
-                string title = Console.ReadLine();
-                title = ValidateInput(title);
-                book.SetTitle(title);
+                return;
+            }
 
-                Console.Write("Enter Author: ");
-                string author = Console.ReadLine();
-                author = ValidateInput(author);
-                book.SetAuthor(author);
+            Console.WriteLine("Choose the property to edit:");
+            Console.WriteLine("1 to edit Title");
+            Console.WriteLine("2 to edit Author");
+            Console.WriteLine("3 to edit ISBN");
+            Console.WriteLine("4 to edit Category");
+            Console.WriteLine("5 to edit Publication Date");
+            Console.WriteLine("6 to edit Availability Status");
 
-                Console.Write("Enter ISBN: ");
-                string iSBN = Console.ReadLine();
-                iSBN = ValidateISBN(iSBN);
-                book.SetISBN(iSBN);
+            try {
+                Console.Write("Enter Option: ");
+                int editOption = Convert.ToInt32(Console.ReadLine());
 
+                switch (editOption)
+                {
+                    case 1:
+                        Console.Write("Enter Title: ");
+                        string title = Console.ReadLine();
+                        title = ValidateInput(title);
 
-                Console.Write("Enter Category : ");
-                string category = Console.ReadLine();
-                category = ValidateInput(category);
-                book.SetCategory(category);
+                        if (title == null)
+                        {
+                            Console.WriteLine("Try adding a book to the library again\nPress Enter to see menu");
+                            return;
+                        }
 
-                Console.Write("Enter Publication Date: ");
-                string publicationDate = Console.ReadLine();
-                publicationDate = ValidatePublicationDate(publicationDate);
-                book.SetPublicationDate(publicationDate);
+                        book.SetTitle(title);
+                        break;
+                    case 2:
+                        Console.Write("Enter Author: ");
+                        string author = Console.ReadLine();
+                        author = ValidateInput(author);
 
-                Console.Write("Enter Availability Status: ");
-                string availabilityStatus = Console.ReadLine();
-                availabilityStatus = ValidateInput(availabilityStatus);
-                book.SetAvailabilityStatus(availabilityStatus);
+                        if (author == null)
+                        {
+                            Console.WriteLine("Try adding a book to the library again\nPress Enter to see menu");
+                            return;
+                        }
+                        book.SetAuthor(author);
+                        break;
+                    case 3:
+                        Console.Write("Enter ISBN: ");
+                        string iSBN = Console.ReadLine();
+                        iSBN = ValidateISBN(iSBN);
 
-                books.Add(book);
+                        if (iSBN == null)
+                        {
+                            Console.WriteLine("Try adding a book to the library again\nPress Enter to see menu");
+                            return;
+                        }
+
+                        book.SetISBN(iSBN);
+                        break;
+                    case 4:
+                        Console.Write("Enter Publication Date(MM/DD/YYYY): ");
+                        string publicationDate = Console.ReadLine();
+                        DateOnly? convertedDate = ValidatePublicationDate(publicationDate);
+
+                        if (convertedDate == null)
+                        {
+                            Console.WriteLine("Try adding a book to the library again\nPress Enter to see menu");
+                            return;
+                        }
+
+                        book.SetPublicationDate(convertedDate);
+                        break;
+                    case 5:
+                        Console.Write("Enter Category : ");
+                        string category = Console.ReadLine();
+                        category = ValidateCategory(category);
+
+                        if (category == null)
+                        {
+                            Console.WriteLine("Try adding a book to the library again\nPress Enter to see menu");
+                            return;
+                        }
+
+                        book.SetCategory(category);
+                        break;
+                    case 6:
+                        Console.Write("Enter Availability Status: ");
+                        string availabilityStatus = Console.ReadLine();
+                        availabilityStatus = ValidateAvailability(availabilityStatus);
+
+                        if (availabilityStatus == null)
+                        {
+                            Console.WriteLine("Try adding a book to the library again\nPress Enter to see menu");
+                            return;
+                        }
+
+                        book.SetAvailabilityStatus(availabilityStatus);
+                        break;
+
+                }  
             }
             catch (FormatException)
             {
-                Console.WriteLine("Invalid Data");
+                Console.WriteLine("Invalid Option\nChoose a valid Option\n\nPress Enter to load menu");
             }
         }
 
@@ -137,6 +247,21 @@ namespace LibraryMgmt
 
             string id = Console.ReadLine();
             Book book = GetBookById(id);
+
+
+            if (book == null)
+            {
+                return;
+            }
+
+            try
+            {
+                books.Remove(book);
+            }
+            catch (Exception)
+            {
+                Console.WriteLine("Error occured while trying to remove book from the library");
+            }
             Console.WriteLine("Book removed successfully!");
         }
 
@@ -144,20 +269,35 @@ namespace LibraryMgmt
         {
             Console.Write("Enter ID of the book you want to borrow: ");
             string id = Console.ReadLine();
+
             Book book = GetBookById(id);
-            if( book.GetAvailabilityStatus() == "Unavailable")
+
+            if (book == null)
+            {
+                return;
+            }
+
+            if (book.GetAvailabilityStatus() == "Unavailable")
             {
                 Console.WriteLine($"Book {book.BookId} {book.GetTitle()} is currently unavailable");
                 return;
             }
             book.SetAvailabilityStatus("Unavailable");
+            Console.WriteLine("Book successfully borrowed\nHave a good read!");
         }
 
         public void ReturnBook()
         {
             Console.Write("Enter ID of the book you want to return: ");
             string id = Console.ReadLine();
+
             Book book = GetBookById(id);
+
+            if (book == null)
+            {
+                return;
+            }
+
             if (book.GetAvailabilityStatus() == "Available")
             {
                 Console.WriteLine($"Book {book.BookId} {book.GetTitle()} is already available");
@@ -169,15 +309,148 @@ namespace LibraryMgmt
 
         public void SortBooks()
         {
+            List<Book> sortedBooks;
+            int option;
+
+            if (books.Count == 0) 
+            {
+                Console.WriteLine("No books available");
+                return;
+            }
+
             Console.Write("Enter 1 to sort by Publication Date: ");
             Console.Write("Enter 2 to sort by Title: ");
+           
+            try
+            {
+               option = Convert.ToInt32(Console.ReadLine());
+            }
+            catch (FormatException)
+            {
+                Console.WriteLine("You entered an invalid option. Try again");
+                return;
+            }
+
+            if (option == 1)
+            {
+                sortedBooks = books.OrderBy(x => x.GetPublicationDate()).ToList();
+                LibraryTable(sortedBooks);
+            }
+            else if (option == 2)
+            {
+                sortedBooks = books.OrderBy(x => x.GetTitle()).ToList();
+                LibraryTable(sortedBooks);
+            }
+            else 
+            {
+                Console.WriteLine("You entered an invalid option");
+            }
         }
 
         public void FilterBooks()
         {
-            Console.Write("Enter 1 to filter by Category: ");
-            Console.Write("Enter 2 to filter by Author: ");
-            Console.Write("Enter 3 to filter by Availability: ");
+            List<Book> filteredBooks;
+            int option;
+
+            if (books.Count == 0)
+            {
+                Console.WriteLine("No books available");
+                return;
+            }
+
+            Console.WriteLine("Enter 1 to filter by Category");
+            Console.WriteLine("Enter 2 to filter by Author");
+            Console.WriteLine("Enter 3 to filter by Availability");
+            Console.Write("Enter Option: ");
+
+            try
+            {
+                option = Convert.ToInt32(Console.ReadLine());
+            }
+            catch (FormatException)
+            {
+                Console.WriteLine("You entered an invalid option. Try again");
+                return;
+            }
+
+            if (option == 1)
+            {
+                Console.Write("Enter Category to filter by: ");
+                string category = Console.ReadLine();
+
+                category = ValidateCategory(category);
+
+                try
+                {
+                    filteredBooks = books.Where(x => string.Equals(x.GetCategory(), category, StringComparison.OrdinalIgnoreCase)).ToList();
+
+                    if (!filteredBooks.Any())
+                    {
+                        Console.WriteLine($"No books found for category '{category}'.");
+                        return;
+                    }
+
+                    LibraryTable(filteredBooks);
+                }
+                catch (Exception)
+                {
+
+                    Console.WriteLine($"Category {category} not found!\n Input a valid category");
+                }
+            }
+            else if (option == 2)
+            {
+                Console.Write("Enter Author to filter by: ");
+                string author = Console.ReadLine();
+                author = ValidateInput(author);
+                try
+                {
+                    filteredBooks = books.Where(x => string.Equals(x.GetAuthor(), author, StringComparison.OrdinalIgnoreCase)).ToList();
+
+                    if (!filteredBooks.Any())
+                    {
+                        Console.WriteLine($"No books found for author '{author}'.");
+                        return;
+                    }
+
+                    LibraryTable(filteredBooks);
+                }
+                catch (Exception)
+                {
+
+                    Console.WriteLine($"Author {author} not found!\n Input a valid author");
+                }
+            }
+            else if (option == 3) 
+            {
+                Console.Write("Enter Availability Status to filter by: ");
+                string availability = Console.ReadLine();
+                availability = ValidateAvailability(availability);
+
+                try
+                {
+                    filteredBooks = books.Where(x => string.Equals(x.GetAvailabilityStatus(), availability, StringComparison.OrdinalIgnoreCase)).ToList();
+
+                    if (!filteredBooks.Any())
+                    {
+                        Console.WriteLine($"No books found as '{availability}'.");
+                        return;
+                    }
+
+                    LibraryTable(filteredBooks);
+                }
+                catch (Exception)
+                {
+
+                    Console.WriteLine($"Input a valid availability");
+                }
+
+                
+            }
+            else
+            {
+                Console.WriteLine("You entered an invalid option");
+            }
         }
 
         public void LoadFile()
@@ -185,56 +458,110 @@ namespace LibraryMgmt
 
         }
 
-        public void EditFile()
-        {
-
-        }
-
         public void SaveToFile()
-        { 
-        
+        {
+
         }
 
-        public Book GetBookById(string id)
+        private Book GetBookById(string id)
         {
-            if (id == null) { 
-            
-                throw new ArgumentNullException("id");
+            if (id == null) {
+
+                Console.WriteLine("Invalid Book ID provided.");
+                return null;
             }
 
-           Book book = books.Single(book => book.BookId == id);
-
-            if (book == null)
+            try
             {
-                throw new InvalidOperationException("Book not found.");
+                Book book = books.Single(book => book.BookId == id);
+
+                return book;
             }
-
-
-            return book;
+            catch (Exception)
+            {
+                Console.WriteLine($"Book with ID {id} not found");
+                return null;
+            } 
         }
 
-        public static string ValidateInput(string input)
+        private static string? ValidateInput(string input)
         {
-            if (input.Length == 0 || string.IsNullOrWhiteSpace(input))
+            int attempts = 0;
+
+            while (input.Length == 0 || string.IsNullOrWhiteSpace(input))
             {
-                Console.Write("Please enter a valid input: ");
-               string newInput = Console.ReadLine();
-               if (newInput.Length == 0 || string.IsNullOrWhiteSpace(newInput))
+                if (attempts == 5)
                 {
-                    Console.WriteLine("You entered an invalid input");
-                    return "You entered an invalid input";
+                    Console.WriteLine("You entered an invalid input 5 times");
+                    return null;
                 }
 
-                ValidateInput(newInput);
+                Console.Write("Please enter a valid input: ");
+                input = Console.ReadLine();
+                attempts++;
             }
    
             return input;
         }
 
-        public static string ValidateISBN(string isbn)
+        private static string? ValidateCategory(string category)
+        {
+            int attempts = 0;
+
+            while (category.Length == 0 || string.IsNullOrWhiteSpace(category) || !IsValidCategory(category))
+            {
+                if (attempts == 5)
+                {
+                    Console.WriteLine("You entered an invalid category 5 times");
+                    return null;
+                }
+
+                Console.Write("Please enter a valid category: ");
+                category = Console.ReadLine();
+                attempts++;
+            }
+
+            return category;
+        }
+
+        private static string? ValidateAvailability(string availability)
+        {
+            int attempts = 0;
+
+            while (availability.Length == 0 || string.IsNullOrWhiteSpace(availability) || !IsValidAvailabilityStatus(availability))
+            {
+                if (attempts == 5)
+                {
+                    Console.WriteLine("You entered an invalid availability status 5 times");
+                    return null;
+                }
+
+                Console.Write("Please enter a valid availability status: ");
+                availability = Console.ReadLine();
+                attempts++;
+            }
+
+            return availability;
+        }
+
+        private static string? ValidateISBN(string isbn)
         {
             isbn = isbn.Replace("-", "").Replace(" ", "");
             string validatedIsbn;
+            int attempts = 0;
+
+            while (isbn.Length != 10 && isbn.Length != 13 || string.IsNullOrWhiteSpace(isbn))
+            {
+                if (attempts == 5)
+                {
+                    Console.WriteLine("You entered an invalid ISBN 5 times.");
+                    return null;
+                }
+
+                Console.Write("Please enter a valid ISBN: ");
+                isbn = Console.ReadLine();
+                attempts++;
+            }
 
             if (isbn.Length == 13 && Regex.IsMatch(isbn, @"^\d{13}$"))
             {
@@ -248,41 +575,96 @@ namespace LibraryMgmt
                 validatedIsbn = $"{isbn.Substring(0, 1)}-{isbn.Substring(1, 3)}-{isbn.Substring(4, 5)}-{isbn.Substring(9, 1)}";
                 return validatedIsbn;
             }
-            else
-            {
-                Console.WriteLine("You entered an invalid input");
-                return "You entered an invalid ISBN";
-            }
+
+            // If it reaches here, it means the input did not match any format
+            Console.WriteLine("The ISBN format is invalid.");
+            return null;
 
         }
 
-        public static string ValidatePublicationDate(string publicationDate)
+        private static DateOnly? ValidatePublicationDate(string publicationDate)
         {
+            int attempts = 0;
+
+            while (publicationDate.Length < 10 || string.IsNullOrWhiteSpace(publicationDate))
+            {
+                if (attempts == 5)
+                {
+                    Console.WriteLine("You entered an invalid date 5 times.");
+                    return null;
+                }
+
+                Console.Write("Please enter a valid date: ");
+                publicationDate = Console.ReadLine();
+                attempts++;
+            }
+
             // Remove slashes and spaces
             publicationDate = publicationDate.Replace("/", "").Replace(" ", "");
 
             if (publicationDate.Length == 8 && Regex.IsMatch(publicationDate, @"^\d{8}$"))
             {
-                // Extract day, month, and year
                 int day = Convert.ToInt32(publicationDate.Substring(0, 2));
                 int month = Convert.ToInt32(publicationDate.Substring(2, 2));
                 int year = Convert.ToInt32(publicationDate.Substring(4, 4));
 
-                // Try creating a DateTime to check for a valid date
-                if (DateTime.TryParse($"{year}/{month}/{day}", out DateTime validDate) && year <= 2024)
+                if (DateOnly.TryParseExact($"{month:D2}{day:D2}{year}", "MMddyyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateOnly validDate) && year <= 2024)
                 {
-                    // Format as MM/dd/YYYY if valid
-                    return validDate.ToString("MM/dd/yyyy");
+                    return validDate;
                 }
             }
 
             Console.WriteLine("You entered an invalid date");
-            return "You entered an invalid Publication date";
+            return null;
         }
 
         public static void ValidateFile() 
         {
         
         }
+
+        private static readonly List<string> Categories =
+        [
+            "Fiction",
+            "Non-Fiction",
+            "Science",
+            "Mathematics",
+            "History",
+            "Biography",
+            "Children's Books",
+            "Poetry",
+            "Philosophy",
+            "Psychology",
+            "Religion",
+            "Self-Help",
+            "Science Fiction",
+            "Fantasy",
+            "Mystery",
+            "Romance",
+            "Horror",
+            "Graphic Novels/Comics",
+            "Art",
+            "Travel",
+            "Technology"
+        ];
+
+        private static readonly List<string> Availability =
+        [
+            "Available",
+            "Unavailable",
+            "Pending",
+            "Reserved"
+        ];
+
+        private static bool IsValidCategory(string category)
+        {
+           return Categories.Exists(category => category.Equals(category, StringComparison.OrdinalIgnoreCase));
+        }
+
+        private static bool IsValidAvailabilityStatus(string availability)
+        {
+           return Availability.Exists(status => status.Equals(availability, StringComparison.OrdinalIgnoreCase));
+        }
+
     }
 }

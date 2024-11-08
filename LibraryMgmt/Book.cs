@@ -8,7 +8,7 @@ namespace LibraryMgmt
 {
     public class Book
     {
-        private static int bookCounter = 0;
+        private static int _bookCounter = 0;
 
         public Book() 
         {
@@ -19,7 +19,7 @@ namespace LibraryMgmt
         private string Title;
         private string Author;
         private string ISBN;
-        private DateOnly PublicationDate;
+        private DateOnly? PublicationDate;
         private string Category;
         private string AvailabilityStatus;
 
@@ -48,19 +48,18 @@ namespace LibraryMgmt
             return this.ISBN;
         }
 
-        public void SetISBN(string ISBN)
+        public void SetISBN(string iSBN)
         {
-            this.ISBN = ISBN;
+            this.ISBN = iSBN;
         }
 
-        public DateOnly GetPublicationDate()
+        public DateOnly? GetPublicationDate()
         {
             return this.PublicationDate;
         }
 
-        public void SetPublicationDate(string publicationDate)
+        public void SetPublicationDate(DateOnly? convertedDate)
         {
-            DateOnly convertedDate = DateOnly.Parse(publicationDate);
             this.PublicationDate = convertedDate;
         }
 
@@ -86,7 +85,7 @@ namespace LibraryMgmt
 
         public static string GenerateBookId()
         {
-            int id = ++bookCounter;
+            int id = ++_bookCounter;
             string generatedId = $"LIB00{id}";
 
             return generatedId;

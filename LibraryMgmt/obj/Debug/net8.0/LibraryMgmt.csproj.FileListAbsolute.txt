@@ -12,3 +12,4 @@ C:\Users\duyil\source\repos\LibraryMgmt\LibraryMgmt\obj\Debug\net8.0\refint\Libr
 C:\Users\duyil\source\repos\LibraryMgmt\LibraryMgmt\obj\Debug\net8.0\LibraryMgmt.pdb
 C:\Users\duyil\source\repos\LibraryMgmt\LibraryMgmt\obj\Debug\net8.0\LibraryMgmt.genruntimeconfig.cache
 C:\Users\duyil\source\repos\LibraryMgmt\LibraryMgmt\obj\Debug\net8.0\ref\LibraryMgmt.dll
+C:\Users\duyil\source\repos\LibraryMgmt\LibraryMgmt\obj\Debug\net8.0\LibraryMgmt.sourcelink.json

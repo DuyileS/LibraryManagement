@@ -18,10 +18,9 @@ while (active)
     Console.WriteLine("6. Filter books");
     Console.WriteLine("7. Sort books");
     Console.WriteLine("8. Load files");
-    Console.WriteLine("9. Edit file");
-    Console.WriteLine("10. Delete a book");
-    Console.WriteLine("11. Save");
-    Console.WriteLine("12. Exit");
+    Console.WriteLine("9. Delete a book");
+    Console.WriteLine("10. Save");
+    Console.WriteLine("11. Exit");
     Console.Write("Enter Option: ");
 
     try
@@ -54,15 +53,12 @@ while (active)
                 libraryManager.LoadFile();
                 break;
             case 9:
-                libraryManager.EditFile();
-                break;
-            case 10:
                 libraryManager.RemoveBook();
                 break;
-            case 11:
+            case 10:
                 libraryManager.SaveToFile();
                 break;
-            case 12:
+            case 11:
                 active = false;
                 Console.WriteLine("Exiting Library Manager...");
                 break;
