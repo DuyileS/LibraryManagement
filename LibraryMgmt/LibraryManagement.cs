@@ -455,12 +455,40 @@ namespace LibraryMgmt
 
         public void LoadFile()
         {
+            books.Clear();
 
+            if(File.Exists("books.txt"))
+            {
+                using (StreamReader streamReader = new StreamReader("books.txt"))
+                {
+                    while (!streamReader.EndOfStream)
+                    {
+                        string[] data = streamReader.ReadLine().Split(",");
+                        Book book = new Book();
+                        book.SetTitle(data[0]);
+                        book.SetAuthor(data[1]);
+                        book.SetISBN(data[2]);
+                        book.SetPublicationDate(DateOnly.ParseExact(data[3].Trim(), "MM/dd/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None));
+                        book.SetCategory(data[4]);
+                        book.SetAvailabilityStatus(data[5]);
+
+                        books.Add(book);
+                    }
+                }
+            }
+
+          
         }
 
         public void SaveToFile()
         {
-
+            using (StreamWriter streamWriter = new StreamWriter("books.txt"))
+            {
+                foreach (Book book in books) 
+                {
+                    streamWriter.WriteLine($"{book.GetTitle()},{book.GetAuthor()},{book.GetISBN()},{book.GetPublicationDate()},{book.GetCategory()},{book.GetAvailabilityStatus()}");
+                }
+            }
         }
 
         private Book GetBookById(string id)
@@ -516,7 +544,7 @@ namespace LibraryMgmt
                     return null;
                 }
 
-                Console.Write("Please enter a valid category: ");
+                Console.Write("Category for a book in this library must belong to one of the standard 21 categories for books in a library\n\nPlease enter a valid category: ");
                 category = Console.ReadLine();
                 attempts++;
             }
@@ -585,8 +613,11 @@ namespace LibraryMgmt
         private static DateOnly? ValidatePublicationDate(string publicationDate)
         {
             int attempts = 0;
+            var datePattern = @"^\d{2}/\d{2}/\d{4}$"; // MM/dd/yyyy format
 
-            while (publicationDate.Length < 10 || string.IsNullOrWhiteSpace(publicationDate))
+            // Continue to prompt the user if the format is incorrect or the input is empty
+
+            while (!Regex.IsMatch(publicationDate, datePattern) || string.IsNullOrWhiteSpace(publicationDate))
             {
                 if (attempts == 5)
                 {
@@ -599,70 +630,82 @@ namespace LibraryMgmt
                 attempts++;
             }
 
-            // Remove slashes and spaces
-            publicationDate = publicationDate.Replace("/", "").Replace(" ", "");
+            bool successfulParse = false;
 
-            if (publicationDate.Length == 8 && Regex.IsMatch(publicationDate, @"^\d{8}$"))
+            int parseAttempts = 0;
+
+            DateOnly? validDate;
+
+            while (!successfulParse)
             {
-                int day = Convert.ToInt32(publicationDate.Substring(0, 2));
-                int month = Convert.ToInt32(publicationDate.Substring(2, 2));
+                // Remove slashes and spaces
+                publicationDate = publicationDate.Replace("/", "").Replace(" ", "");
+
+                int month = Convert.ToInt32(publicationDate.Substring(0, 2));
+                int day = Convert.ToInt32(publicationDate.Substring(2, 2));
                 int year = Convert.ToInt32(publicationDate.Substring(4, 4));
 
-                if (DateOnly.TryParseExact($"{month:D2}{day:D2}{year}", "MMddyyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateOnly validDate) && year <= 2024)
+                if (DateOnly.TryParseExact($"{month:D2}/{day:D2}/{year}", "MM/dd/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateOnly date) && year <= 2024)
                 {
+                    validDate = date;
+                    successfulParse = true;
                     return validDate;
                 }
+
+                if (parseAttempts == 5)
+                {
+                    Console.WriteLine("You entered an invalid date 5 times.");
+                    return null;
+                }
+
+                Console.Write("Please enter a valid date: ");
+                publicationDate = Console.ReadLine();
+                parseAttempts++;
             }
 
-            Console.WriteLine("You entered an invalid date");
             return null;
         }
 
-        public static void ValidateFile() 
-        {
-        
-        }
-
-        private static readonly List<string> Categories =
-        [
-            "Fiction",
-            "Non-Fiction",
-            "Science",
-            "Mathematics",
-            "History",
-            "Biography",
-            "Children's Books",
-            "Poetry",
-            "Philosophy",
-            "Psychology",
-            "Religion",
-            "Self-Help",
-            "Science Fiction",
-            "Fantasy",
-            "Mystery",
-            "Romance",
-            "Horror",
-            "Graphic Novels/Comics",
-            "Art",
-            "Travel",
-            "Technology"
-        ];
-
-        private static readonly List<string> Availability =
-        [
-            "Available",
-            "Unavailable",
-            "Pending",
-            "Reserved"
-        ];
-
         private static bool IsValidCategory(string category)
         {
-           return Categories.Exists(category => category.Equals(category, StringComparison.OrdinalIgnoreCase));
+             List<string> Categories =
+            [
+                "Fiction",
+                "Non-Fiction",
+                "Science",
+                "Mathematics",
+                "History",
+                "Biography",
+                "Children's Books",
+                "Poetry",
+                "Philosophy",
+                "Psychology",
+                "Religion",
+                "Self-Help",
+                "Science Fiction",
+                "Fantasy",
+                "Mystery",
+                "Romance",
+                "Horror",
+                "Graphic Novels/Comics",
+                "Art",
+                "Travel",
+                "Technology"
+            ];
+
+           return Categories.Exists(x => x.Equals(category, StringComparison.OrdinalIgnoreCase));
         }
 
         private static bool IsValidAvailabilityStatus(string availability)
         {
+             List<string> Availability =
+             [
+            "Available",
+            "Unavailable",
+            "Pending",
+            "Reserved"
+             ];
+
            return Availability.Exists(status => status.Equals(availability, StringComparison.OrdinalIgnoreCase));
         }
 

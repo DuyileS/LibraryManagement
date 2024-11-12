@@ -53,9 +53,9 @@ namespace LibraryMgmt
             this.ISBN = iSBN;
         }
 
-        public DateOnly? GetPublicationDate()
+        public string GetPublicationDate()
         {
-            return this.PublicationDate;
+            return this.PublicationDate?.ToString("MM/dd/yyyy") ?? "Publication Date Not Available";
         }
 
         public void SetPublicationDate(DateOnly? convertedDate)
