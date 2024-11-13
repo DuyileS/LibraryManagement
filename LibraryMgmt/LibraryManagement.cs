@@ -617,7 +617,7 @@ namespace LibraryMgmt
 
             // Continue to prompt the user if the format is incorrect or the input is empty
 
-            while (!Regex.IsMatch(publicationDate, datePattern) || string.IsNullOrWhiteSpace(publicationDate))
+            while (!Regex.IsMatch(publicationDate, datePattern) || publicationDate.Length <10 || string.IsNullOrWhiteSpace(publicationDate))
             {
                 if (attempts == 5)
                 {
@@ -625,7 +625,7 @@ namespace LibraryMgmt
                     return null;
                 }
 
-                Console.Write("Please enter a valid date: ");
+                Console.Write("Please enter a valid date(MM/dd/yyyy): ");
                 publicationDate = Console.ReadLine();
                 attempts++;
             }
@@ -646,7 +646,7 @@ namespace LibraryMgmt
                 int year = Convert.ToInt32(publicationDate.Substring(4, 4));
 
                 if (DateOnly.TryParseExact($"{month:D2}/{day:D2}/{year}", "MM/dd/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateOnly date) 
-                    && year <= DateTime.Today.Year && date <= DateOnly.FromDateTime(DateTime.Today))
+                    && date <= DateOnly.FromDateTime(DateTime.Today))
                 {
                     validDate = date;
                     successfulParse = true;
@@ -659,7 +659,7 @@ namespace LibraryMgmt
                     return null;
                 }
 
-                Console.Write("Please enter a valid date: ");
+                Console.Write("Please enter a valid date(MM/dd/yyyy): ");
                 publicationDate = Console.ReadLine();
                 parseAttempts++;
             }
