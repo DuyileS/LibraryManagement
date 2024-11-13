@@ -645,7 +645,8 @@ namespace LibraryMgmt
                 int day = Convert.ToInt32(publicationDate.Substring(2, 2));
                 int year = Convert.ToInt32(publicationDate.Substring(4, 4));
 
-                if (DateOnly.TryParseExact($"{month:D2}/{day:D2}/{year}", "MM/dd/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateOnly date) && year <= 2024)
+                if (DateOnly.TryParseExact($"{month:D2}/{day:D2}/{year}", "MM/dd/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateOnly date) 
+                    && year <= DateTime.Today.Year && date <= DateOnly.FromDateTime(DateTime.Today))
                 {
                     validDate = date;
                     successfulParse = true;

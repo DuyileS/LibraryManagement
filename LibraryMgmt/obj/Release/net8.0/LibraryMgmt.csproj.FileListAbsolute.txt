@@ -1,0 +1,15 @@
+C:\Users\duyil\source\repos\LibraryMgmt\LibraryMgmt\bin\Release\net8.0\LibraryMgmt.exe
+C:\Users\duyil\source\repos\LibraryMgmt\LibraryMgmt\bin\Release\net8.0\LibraryMgmt.deps.json
+C:\Users\duyil\source\repos\LibraryMgmt\LibraryMgmt\bin\Release\net8.0\LibraryMgmt.runtimeconfig.json
+C:\Users\duyil\source\repos\LibraryMgmt\LibraryMgmt\bin\Release\net8.0\LibraryMgmt.dll
+C:\Users\duyil\source\repos\LibraryMgmt\LibraryMgmt\bin\Release\net8.0\LibraryMgmt.pdb
+C:\Users\duyil\source\repos\LibraryMgmt\LibraryMgmt\obj\Release\net8.0\LibraryMgmt.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\duyil\source\repos\LibraryMgmt\LibraryMgmt\obj\Release\net8.0\LibraryMgmt.AssemblyInfoInputs.cache
+C:\Users\duyil\source\repos\LibraryMgmt\LibraryMgmt\obj\Release\net8.0\LibraryMgmt.AssemblyInfo.cs
+C:\Users\duyil\source\repos\LibraryMgmt\LibraryMgmt\obj\Release\net8.0\LibraryMgmt.csproj.CoreCompileInputs.cache
+C:\Users\duyil\source\repos\LibraryMgmt\LibraryMgmt\obj\Release\net8.0\LibraryMgmt.sourcelink.json
+C:\Users\duyil\source\repos\LibraryMgmt\LibraryMgmt\obj\Release\net8.0\LibraryMgmt.dll
+C:\Users\duyil\source\repos\LibraryMgmt\LibraryMgmt\obj\Release\net8.0\refint\LibraryMgmt.dll
+C:\Users\duyil\source\repos\LibraryMgmt\LibraryMgmt\obj\Release\net8.0\LibraryMgmt.pdb
+C:\Users\duyil\source\repos\LibraryMgmt\LibraryMgmt\obj\Release\net8.0\LibraryMgmt.genruntimeconfig.cache
+C:\Users\duyil\source\repos\LibraryMgmt\LibraryMgmt\obj\Release\net8.0\ref\LibraryMgmt.dll
